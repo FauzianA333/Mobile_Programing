@@ -1,0 +1,398 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const ProfileApp());
+}
+
+class ProfileApp extends StatelessWidget {
+  const ProfileApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Kartu Profil',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: const Color(0xFF6558D3),
+        scaffoldBackgroundColor: const Color(0xFFF5F6FA),
+      ),
+      home: const ProfilePage(),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isWide = constraints.maxWidth > 600;
+
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: isWide ? 48 : 20,
+                vertical: 32,
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 900,
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(isWide ? 36 : 24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withAlpha(12),
+                          blurRadius: 25,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // HEADER
+                        const Row(
+                          children: [
+                            Icon(
+                              Icons.person_pin,
+                              color: Color(0xFF6558D3),
+                              size: 28,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              'MY PROFILE',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                                color: Color(0xFF6558D3),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 32),
+
+                        // RESPONSIVE PROFILE SECTION
+                        if (isWide)
+                          const Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ProfileAvatar(size: 150),
+                              SizedBox(width: 32),
+                              Expanded(
+                                child: ProfileInfo(),
+                              ),
+                            ],
+                          )
+                        else
+                          const Column(
+                            children: [
+                              ProfileAvatar(size: 125),
+                              SizedBox(height: 24),
+                              ProfileInfo(),
+                            ],
+                          ),
+
+                        const SizedBox(height: 32),
+                        const Divider(color: Color(0xFFEEEEF4)),
+                        const SizedBox(height: 24),
+
+                        // ABOUT ME
+                        const Text(
+                          'Tentang Saya',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF25243A),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Saya adalah mahasiswa Sistem Informasi '
+                          'yang tertarik pada pengembangan aplikasi '
+                          'mobile, desain UI/UX, dan teknologi digital. '
+                          'Saya senang mempelajari hal baru dan '
+                          'membangun aplikasi yang bermanfaat.',
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(
+                            fontSize: 14,
+                            height: 1.8,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+
+                        const SizedBox(height: 28),
+
+                        // SKILLS
+                        const Text(
+                          'Keahlian Saya',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF25243A),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        const Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: [
+                            SkillChip(label: 'Flutter'),
+                            SkillChip(label: 'Dart'),
+                            SkillChip(label: 'UI/UX Design'),
+                            SkillChip(label: 'Figma'),
+                            SkillChip(label: 'HTML & CSS'),
+                            SkillChip(label: 'Database'),
+                          ],
+                        ),
+
+                        const SizedBox(height: 28),
+
+                        // SOCIAL CONTACTS
+                        const Text(
+                          'Kontak & Sosial Media',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF25243A),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        const Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ContactItem(
+                              icon: Icons.email_outlined,
+                              label: 'Email',
+                            ),
+                            ContactItem(
+                              icon: Icons.phone_outlined,
+                              label: 'Telepon',
+                            ),
+                            ContactItem(
+                              icon: Icons.code,
+                              label: 'GitHub',
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 28),
+
+                        // FOOTER
+                        Center(
+                          child: Text(
+                            '© 2026 • Kartu Profil Mahasiswa',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// FOTO PROFIL + BADGE
+class ProfileAvatar extends StatelessWidget {
+  final double size;
+
+  const ProfileAvatar({
+    super.key,
+    required this.size,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: const Color(0xFFDDD8FF),
+              width: 5,
+            ),
+          ),
+          child: CircleAvatar(
+            backgroundColor: const Color(0xFFE8E5FF),
+            child: Icon(
+              Icons.person,
+              size: size * 0.58,
+              color: const Color(0xFF6558D3),
+            ),
+          ),
+        ),
+
+        // POSITIONED BADGE
+        Positioned(
+          right: -5,
+          bottom: 8,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFF20B486),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.white,
+                width: 3,
+              ),
+            ),
+            child: const Text(
+              'Available',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// INFORMASI PROFIL
+class ProfileInfo extends StatelessWidget {
+  const ProfileInfo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'M. Fauzian Afshor',
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF25243A),
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Mahasiswa Sistem Informasi',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF6558D3),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Tech enthusiast • Mobile Programing',
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// CHIP KEAHLIAN
+class SkillChip extends StatelessWidget {
+  final String label;
+
+  const SkillChip({
+    super.key,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      avatar: const Icon(
+        Icons.check_circle,
+        size: 16,
+        color: Color(0xFF6558D3),
+      ),
+      label: Text(label),
+      backgroundColor: const Color(0xFFF0EEFF),
+      side: BorderSide.none,
+      labelStyle: const TextStyle(
+        color: Color(0xFF5145B5),
+        fontWeight: FontWeight.w600,
+        fontSize: 12,
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 5,
+        vertical: 4,
+      ),
+    );
+  }
+}
+
+// IKON KONTAK
+class ContactItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const ContactItem({
+    super.key,
+    required this.icon,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 52,
+          height: 52,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0EEFF),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(
+            icon,
+            color: const Color(0xFF6558D3),
+            size: 25,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF45445A),
+          ),
+        ),
+      ],
+    );
+  }
+}
