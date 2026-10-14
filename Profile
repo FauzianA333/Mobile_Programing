@@ -310,7 +310,7 @@ class ProfileInfo extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          'Tech enthusiast • Mobile Programing',
+          'Tech enthusiast • Mobile Programming',
           style: TextStyle(
             fontSize: 13,
             color: Colors.grey.shade600,
